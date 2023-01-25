@@ -26,7 +26,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include <stdlib.h>
+#include "heater_config.h"
+#include "bmp2_config.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,6 +49,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+float reference = 30.f;
 
 /* USER CODE END PV */
 
@@ -57,7 +61,38 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+char msg_rec[];
+/*
+float str2f(&str)
+{
+	float res = str[0]-48;
+	int dec_digit = 0;
+	for (int i = 1; i < sizeof(str)/sizeof(str[0]); i++)
+	{
+		if (str[i] == 46)
+			dec_digit = i;
+		else if (dec_digit == 0)
+		{
+			res = 10*res;
+			res += str[i]-48;
+		}
+		else
+		{
+			res += (str[i]-48) / pow(10, i-dec_digit);
+		}
+	}
+}*/
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  if(huart == &huart3)
+  {
+		reference = strtof(msg_rec, NULL);
+		if (reference > 40.f)
+			reference = 40.f;
+		HAL_UART_Receive_IT(&huart3, (uint8_t*)&msg_rec, 2);
+  }
+}
 /* USER CODE END 0 */
 
 /**
@@ -67,7 +102,6 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -93,16 +127,30 @@ int main(void)
   MX_SPI4_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
+  BMP2_Init(&bmp2dev_1);
+  HEATER_PWM_Init(&hheater);
 
+	HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_rec, 2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	double reading = BMP2_ReadTemperature_degC(&bmp2dev_1);
+
+	float duty = 50.f;
+	if (reading > 30.f)
+		duty = 0;
+    HEATER_PWM_WriteDuty(&hheater, duty);
+
+	char msg[64] = {0, };
+	int msg_len = sprintf(msg, "temperature: %.4gC,    reference: %.4gC,    duty: %i%%\r\n", reading, reference, (int)duty);
+	HAL_UART_Transmit(&huart3, (uint8_t*)msg, msg_len, 100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
