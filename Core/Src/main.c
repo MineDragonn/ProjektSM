@@ -140,7 +140,7 @@ int main(void)
 	double reading = BMP2_ReadTemperature_degC(&bmp2dev_1);
 
 	float duty = 50.f;
-	if (reading > 30.f)
+	if (reading > reference)
 		duty = 0;
     HEATER_PWM_WriteDuty(&hheater, duty);
 
