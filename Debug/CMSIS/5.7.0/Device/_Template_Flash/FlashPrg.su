@@ -1,0 +1,5 @@
+../CMSIS/5.7.0/Device/_Template_Flash/FlashPrg.c:61:5:Init	24	static
+../CMSIS/5.7.0/Device/_Template_Flash/FlashPrg.c:74:5:UnInit	16	static
+../CMSIS/5.7.0/Device/_Template_Flash/FlashPrg.c:86:5:EraseChip	4	static
+../CMSIS/5.7.0/Device/_Template_Flash/FlashPrg.c:99:5:EraseSector	16	static
+../CMSIS/5.7.0/Device/_Template_Flash/FlashPrg.c:114:5:ProgramPage	24	static

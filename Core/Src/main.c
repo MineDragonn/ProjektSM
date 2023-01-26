@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include "heater_config.h"
 #include "bmp2_config.h"
+#include "arm_math.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,7 +50,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-float reference = 30.f;
+float reference = 30.f;	//[*C]
+float duty = 50.f;		//[%]
+float reading = 0.f;	//[*C]
 
 /* USER CODE END PV */
 
@@ -62,27 +65,6 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 char msg_rec[];
-/*
-float str2f(&str)
-{
-	float res = str[0]-48;
-	int dec_digit = 0;
-	for (int i = 1; i < sizeof(str)/sizeof(str[0]); i++)
-	{
-		if (str[i] == 46)
-			dec_digit = i;
-		else if (dec_digit == 0)
-		{
-			res = 10*res;
-			res += str[i]-48;
-		}
-		else
-		{
-			res += (str[i]-48) / pow(10, i-dec_digit);
-		}
-	}
-}*/
-
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if(huart == &huart3)
@@ -130,14 +112,25 @@ int main(void)
   BMP2_Init(&bmp2dev_1);
   HEATER_PWM_Init(&hheater);
 
-	HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_rec, 2);
+  HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_rec, 2);
+
+  //PID
+  arm_pid_instance_f32 PID;
+  PID.Kp = 2;
+  PID.Ki = 0.2;
+  PID.Kd = 0;
+  arm_pid_init_f32(&PID, 1);
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	double reading = BMP2_ReadTemperature_degC(&bmp2dev_1);
+	float reading = BMP2_ReadTemperature_degC(&bmp2dev_1);
+
+	float32_t out = arm_pid_f32(&PID, reference-reading);
 
 	float duty = 50.f;
 	if (reading > 30.f)

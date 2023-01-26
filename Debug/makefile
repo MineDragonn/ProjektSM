@@ -62,7 +62,7 @@ main-build: ProjektSM.elf secondary-outputs
 
 # Tool invocations
 ProjektSM.elf ProjektSM.map: $(OBJS) $(USER_OBJS) H:\AIR\semestr5\SM\zadania\ProjektSM\STM32F746ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "ProjektSM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"H:\AIR\semestr5\SM\zadania\ProjektSM\STM32F746ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ProjektSM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "ProjektSM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"H:\AIR\semestr5\SM\zadania\ProjektSM\STM32F746ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ProjektSM.map" -Wl,--gc-sections -static -LC:\Users\Szymon\STM32Cube\Repository\Packs\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

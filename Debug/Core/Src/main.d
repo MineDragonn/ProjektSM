@@ -41,7 +41,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  H:/AIR/semestr5/SM/zadania/ProjektSM/Components/Inc/pwm.h \
  H:/AIR/semestr5/SM/zadania/ProjektSM/Components/Inc/bmp2_config.h \
  H:/AIR/semestr5/SM/zadania/ProjektSM/Components/Inc/bmp2.h \
- H:/AIR/semestr5/SM/zadania/ProjektSM/Components/Inc/bmp2_defs.h
+ H:/AIR/semestr5/SM/zadania/ProjektSM/Components/Inc/bmp2_defs.h \
+ ../Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/arm_math.h \
+ ../Drivers/CMSIS/Include/cmsis_compiler.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h:
 ../Core/Inc/stm32f7xx_hal_conf.h:
@@ -90,3 +92,5 @@ H:/AIR/semestr5/SM/zadania/ProjektSM/Components/Inc/pwm.h:
 H:/AIR/semestr5/SM/zadania/ProjektSM/Components/Inc/bmp2_config.h:
 H:/AIR/semestr5/SM/zadania/ProjektSM/Components/Inc/bmp2.h:
 H:/AIR/semestr5/SM/zadania/ProjektSM/Components/Inc/bmp2_defs.h:
+../Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/arm_math.h:
+../Drivers/CMSIS/Include/cmsis_compiler.h:
